@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <title>Stopwatch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Keania+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@100;200;400;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <p class="time-text" v-html="timerText"></p>
+        <div id="buttons">
+            <button class="btn success" @click="startTimer" v-if="!started">START</button>
+            <button class="btn warning" @click="pauseTimer" v-else>PAUSE</button>
+            <button class="btn primary" v-if="started" @click="splitTime">SPLIT</button>
+            <button class="btn danger" @click="reset">RESET</button>
+        </div>
+        <div id="times">
+            <p v-for="(item, index) in splitedTimeList">#{{ index+1 }} <span class="time">{{ item }}</span></p>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var app = new Vue({
+            'el': '#app',
+            data: {
+                timerText: "00.00.00",
+                elapsedTime: 0,
+                started: false,
+                timer: undefined,
+                splitedTimeList: []
+            },
+            methods: {
+                startTimer () {
+                    this.started = true
+                    this.timer = setInterval(() => {
+                        this.elapsedTime += 1
+                    }, 1000)
+                },
+
+                pauseTimer () {
+                    this.started = false
+                    clearInterval(this.timer)
+                },
+
+                getFormattedTimes () {
+                    elapsedSeconds = this.elapsedTime
+                    seconds = parseInt(elapsedSeconds % 60)
+                    minutes = parseInt(elapsedSeconds / 60)
+                    hours = parseInt(minutes / 60)
+
+                    seconds = this.zeroPrefix(seconds, 2)
+                    minutes = this.zeroPrefix(minutes, 2)
+                    hours = this.zeroPrefix(parseInt(hours), 2)
+
+                    return `${hours}.${minutes}.${seconds}`
+                },
+
+                splitTime () {
+                    this.splitedTimeList.unshift(this.getFormattedTimes(this.elapsedTime))
+                },
+
+                reset () {
+                    this.timerText = "00.00.00"
+                    this.started = false
+                    this.elapsedTime = 0
+                    this.splitedTimeList = []
+                    clearInterval(this.timer)
+                },
+
+                zeroPrefix (num, digit) {
+                    num = parseInt(num)
+                    var zero = '';
+                    for(var i = 0; i < digit; i++) {
+                        zero += '0';
+                    }
+                    return (zero + num).slice(-digit);
+                }
+            },
+            
+            watch: {
+                elapsedTime: function (val) {
+                    this.timerText = this.getFormattedTimes()
+                }
+            }
+        })
+    </script>
+</body>
+</html>
