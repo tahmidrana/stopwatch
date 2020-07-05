@@ -20,7 +20,7 @@
             <button class="btn danger" @click="reset">RESET</button>
         </div>
         <div id="times">
-            <p v-for="(item, index) in splitedTimeList">#{{ index+1 }} <span class="time">{{ item }}</span></p>
+            <p v-for="(item, index) in splitedTimeList">#{{ splitedTimeList.length - index }} <span class="time" v-html="item"></span></p>
         </div>
     </div>
 
@@ -38,8 +38,8 @@
                 startTimer () {
                     this.started = true
                     this.timer = setInterval(() => {
-                        this.elapsedTime += 1
-                    }, 1000)
+                        this.elapsedTime += 215
+                    }, 215)
                 },
 
                 pauseTimer () {
@@ -48,16 +48,17 @@
                 },
 
                 getFormattedTimes () {
-                    elapsedSeconds = this.elapsedTime
-                    seconds = parseInt(elapsedSeconds % 60)
-                    minutes = parseInt(elapsedSeconds / 60)
+                    elapsedMillis = this.elapsedTime
+                    millis = parseInt(elapsedMillis % 1000)
+                    seconds = parseInt(elapsedMillis / 1000) % 60
+                    minutes = parseInt(elapsedMillis / 60000)
                     hours = parseInt(minutes / 60)
 
                     seconds = this.zeroPrefix(seconds, 2)
                     minutes = this.zeroPrefix(minutes, 2)
                     hours = this.zeroPrefix(parseInt(hours), 2)
 
-                    return `${hours}.${minutes}.${seconds}`
+                    return `${hours}:${minutes}:${seconds}` + '<span style="text-align: left; font-size:16px; width: 80px;">.'+ millis +'</span>'
                 },
 
                 splitTime () {
@@ -65,15 +66,15 @@
                 },
 
                 reset () {
+                    clearInterval(this.timer)
                     this.timerText = "00.00.00"
                     this.started = false
                     this.elapsedTime = 0
                     this.splitedTimeList = []
-                    clearInterval(this.timer)
                 },
 
                 zeroPrefix (num, digit) {
-                    num = parseInt(num)
+                    // num = parseInt(num)
                     var zero = '';
                     for(var i = 0; i < digit; i++) {
                         zero += '0';

@@ -1,24 +1,21 @@
 body {
     background-color: #34495e;
-    //background-color: #273c75;
     font-family: 'Fira Sans', sans-serif;
 }
 #app {
-    width: 600px;
+    width: 550px;
     margin: 0 auto;
     padding: 8px;
 }
 .time-text{
     font-family: 'Keania One', cursive;
     font-size: 100px;
-    text-align: center;
     margin: 0;
     font-weight: 400;
     color: #fbc531;
 }
 #buttons {
     width: 100%;
-    text-align: center;
 }
 .btn {
     width: 120px;
